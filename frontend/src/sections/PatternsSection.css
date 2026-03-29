@@ -1,0 +1,144 @@
+.patterns-section {
+  padding: var(--space-xl);
+}
+
+.patterns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+.pattern-card {
+  padding: var(--space-lg);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.pattern-card-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-accent);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Bar Chart */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 120px;
+  padding-bottom: var(--space-md);
+}
+
+.bar-chart-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  transition: height var(--transition-slow);
+  position: relative;
+}
+
+.bar:hover {
+  opacity: 0.85;
+}
+
+.bar-label {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Heatmap-style for hourly */
+.heatmap-row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+}
+
+.heatmap-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-family: var(--font-mono);
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform var(--transition-fast);
+  cursor: default;
+  position: relative;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  z-index: 2;
+}
+
+.heatmap-labels {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.heatmap-label {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Monthly chart */
+.monthly-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+}
+
+.monthly-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.monthly-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(to top, var(--primary), var(--secondary));
+  transition: height var(--transition-slow);
+  min-height: 2px;
+}
+
+.monthly-bar:hover {
+  opacity: 0.8;
+}
+
+.monthly-label {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+@media (max-width: 768px) {
+  .patterns-grid {
+    grid-template-columns: 1fr;
+  }
+}

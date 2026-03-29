@@ -1,0 +1,15 @@
+.contributor-section {
+  padding: var(--space-xl);
+}
+
+.contributor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .contributor-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,178 @@
+.repo-input-wrapper {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.repo-input-form {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: stretch;
+}
+
+.repo-input-field-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.repo-input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.repo-input-field {
+  width: 100%;
+  padding: 16px 16px 16px 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--fs-base);
+  font-family: var(--font-mono);
+  transition: all var(--transition-base);
+  backdrop-filter: blur(10px);
+}
+
+.repo-input-field::placeholder {
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+
+.repo-input-field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15), var(--shadow-glow-sm);
+  background: var(--bg-card-hover);
+}
+
+.repo-input-field:focus ~ .repo-input-icon,
+.repo-input-field:not(:placeholder-shown) ~ .repo-input-icon {
+  color: var(--primary-light);
+}
+
+.repo-input-field.input-error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.repo-input-submit {
+  padding: 16px 32px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.repo-input-submit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.repo-input-submit:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.repo-input-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+.repo-input-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.repo-input-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.repo-input-submit .btn-icon {
+  font-size: 1.1rem;
+  display: flex;
+}
+
+.repo-input-error-msg {
+  margin-top: var(--space-sm);
+  padding: 8px 12px;
+  background: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--danger);
+  font-size: var(--fs-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.repo-input-hint {
+  margin-top: var(--space-md);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.repo-input-hint code {
+  font-family: var(--font-mono);
+  background: var(--bg-glass);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--text-accent);
+  font-size: var(--fs-xs);
+}
+
+.repo-input-examples {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.repo-input-example-btn {
+  padding: 6px 14px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.repo-input-example-btn:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--primary);
+  color: var(--primary-light);
+}
+
+@media (max-width: 640px) {
+  .repo-input-form {
+    flex-direction: column;
+  }
+
+  .repo-input-submit {
+    justify-content: center;
+  }
+}
