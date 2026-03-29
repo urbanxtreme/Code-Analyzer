@@ -21,8 +21,20 @@ class RepositoryMetadata(BaseModel):
     created_at: datetime
     updated_at: datetime
     languages: Dict[str, float]
+    topics: List[str] = []
+    license: Optional[str] = None
     total_commits: int
     total_contributors: int
+    health_score: float = 0.0
+    open_issues_to_stars_ratio: float = 0.0
+    last_commit_days_ago: int = 0
+
+class ProjectStructure(BaseModel):
+    """Breakdown of repository complexity and file types."""
+    extension_counts: Dict[str, int]
+    total_files: int
+    folder_counts: Dict[str, int]
+    documentation_status: str  # 'excellent', 'good', 'fair', 'poor'
 
 class ContributorStats(BaseModel):
     """Statistics for an individual contributor."""
@@ -74,4 +86,5 @@ class FinalReport(BaseModel):
     insights: Dict[str, List[str]]  # { "strengths": [...], "weaknesses": [...], "risks": [...] }
     recommendations: List[Recommendation]
     patterns: Patterns
+    structure: ProjectStructure
     generated_at: datetime

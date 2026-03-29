@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Optional
-from ..api.schemas import FinalReport, RepositoryMetadata, ContributorStats, Patterns
+from ..api.schemas import FinalReport, RepositoryMetadata, ContributorStats, Patterns, ProjectStructure
+from ..analytics.file_analyzer import analyze_project_structure
 from datetime import datetime, timezone
 
 def build_report(raw_data: Dict[str, Any], analytics_result: List[ContributorStats], insights: Optional[Dict[str, Any]] = None) -> FinalReport:
@@ -14,6 +15,37 @@ def build_report(raw_data: Dict[str, Any], analytics_result: List[ContributorSta
     total_size = sum(languages.values())
     lang_pcts = {lang: (size / total_size) * 100 for lang, size in languages.items()} if total_size > 0 else {}
     
+    # 1. Analyze Project Structure
+    structure_result = analyze_project_structure(raw_data.get("tree", []))
+    
+    # 2. Calculate Health Score (Basic MVP Heuristic)
+    stars = meta.get("stargazers_count", 0)
+    forks = meta.get("forks_count", 0)
+    issues = meta.get("open_issues_count", 0)
+    
+    health_score = 75.0 # Default
+    if stars > 0:
+        issue_ratio = issues / stars
+        # Lower ratio is generally better
+        if issue_ratio < 0.05: health_score += 15
+        elif issue_ratio < 0.1: health_score += 5
+        elif issue_ratio > 0.5: health_score -= 20
+    
+    if forks > (stars / 5): health_score += 5 # High fork ratio
+    
+    # 3. Last commit days ago
+    last_commit_days = 0
+    commits = raw_data.get("commits", [])
+    if commits:
+        latest_date_str = commits[0].get("commit", {}).get("author", {}).get("date")
+        if latest_date_str:
+            latest_dt = datetime.strptime(latest_date_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            last_commit_days = (datetime.now(timezone.utc) - latest_dt).days
+
+    # 4. License and Topics
+    license_name = meta.get("license", {}).get("name") if meta.get("license") else None
+    repo_topics = meta.get("topics", [])
+
     # Repository Metadata Model
     repo_meta = RepositoryMetadata(
         name=meta.get("name"),
@@ -21,16 +53,21 @@ def build_report(raw_data: Dict[str, Any], analytics_result: List[ContributorSta
         full_name=meta.get("full_name"),
         description=meta.get("description"),
         url=meta.get("html_url"),
-        stars=meta.get("stargazers_count", 0),
-        forks=meta.get("forks_count", 0),
-        open_issues=meta.get("open_issues_count", 0),
+        stars=stars,
+        forks=forks,
+        open_issues=issues,
         watchers=meta.get("watchers_count", 0),
         default_branch=meta.get("default_branch", "main"),
         created_at=datetime.strptime(meta.get("created_at"), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc),
         updated_at=datetime.strptime(meta.get("updated_at"), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc),
         languages=lang_pcts,
-        total_commits=len(raw_data.get("commits", [])),
-        total_contributors=len(raw_data.get("contributors", []))
+        topics=repo_topics,
+        license=license_name,
+        total_commits=len(commits),
+        total_contributors=len(raw_data.get("contributors", [])),
+        health_score=min(max(health_score, 0), 100),
+        open_issues_to_stars_ratio=issues / stars if stars > 0 else 0,
+        last_commit_days_ago=last_commit_days
     )
     
     # AI Summary Model (MVP Mock Version)
@@ -74,6 +111,7 @@ def build_report(raw_data: Dict[str, Any], analytics_result: List[ContributorSta
         insights=final_insights,
         recommendations=recommendations,
         patterns=patterns,
+        structure=structure_result,
         generated_at=datetime.now(timezone.utc)
     )
     

@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .api.routes import router as api_router
 import uvicorn
+import datetime
 
 app = FastAPI(
     title="AI-powered GitHub Repository Intelligence Analyzer",
@@ -22,10 +23,23 @@ app.add_middleware(
 # Include API routes
 app.include_router(api_router, prefix="/api")
 
+@app.get("/")
+async def root():
+    """Welcome route."""
+    return {
+        "message": "Welcome to the AI-powered GitHub Repository Intelligence Analyzer API",
+        "docs": "/docs",
+        "health": "/api/health"
+    }
+
 @app.get("/api/health")
 async def health_check():
     """Simple health check endpoint."""
-    return {"status": "ok", "message": "Backend is running"}
+    return {
+        "status": "ok", 
+        "server": "RepoIntel Backend",
+        "timestamp": datetime.datetime.now().isoformat()
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

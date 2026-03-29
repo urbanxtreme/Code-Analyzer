@@ -8,7 +8,7 @@ import ReportPage from './pages/ReportPage';
 import { useAnalyze } from './hooks/useAnalyze';
 
 export default function App() {
-  const { report, loading, error, currentStep, analyze, reset } = useAnalyze(true);
+  const { report, loading, error, currentStep, analyze, reset } = useAnalyze(false);
 
   const handleAnalyze = (repoUrl) => {
     analyze(repoUrl);
