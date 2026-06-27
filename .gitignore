@@ -1,0 +1,29 @@
+# General
+.DS_Store
+.vscode/
+.idea/
+
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/.pytest_cache/
+*.pyc
+*.pyo
+
+# Environments
+.env
+.env.local
+.env.development
+.env.production
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.eslintcache
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# AI
+AI/model-weights/
+AI/logs/

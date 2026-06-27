@@ -2,18 +2,25 @@ import logging
 import sys
 from .config import settings
 
-def setup_logger():
-    """Configures the application logger."""
-    logger = logging.getLogger("repo-intel")
-    logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
-    
-    handler = logging.StreamHandler(sys.stdout)
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    
-    return logger
 
-logger = setup_logger()
+def setup_logging():
+    """Configure root logging for the entire application."""
+    level = logging.DEBUG if settings.DEBUG else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s  %(levelname)-8s  %(name)s — %(message)s",
+        datefmt="%H:%M:%S",
+        stream=sys.stdout,
+    )
+    # Quiet noisy third-party loggers
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+
+
+# Convenience alias kept for backward compatibility
+def setup_logger():
+    setup_logging()
+    return logging.getLogger("repo-intel")
+
+
+logger = logging.getLogger("repo-intel")

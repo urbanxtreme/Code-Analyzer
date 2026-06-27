@@ -1,17 +1,39 @@
-from fastapi import FastAPI, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from .api.routes import router as api_router
-import uvicorn
+"""
+FastAPI application entry point.
+
+Sets up:
+- CORS middleware (allow all origins in dev)
+- API router from app/api/routes.py
+- Root welcome endpoint
+- Structured logging
+"""
+
+import logging
 import datetime
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from .api.routes import router as api_router
+from .utils.logger import setup_logging
+
+# Initialise structured logging
+setup_logging()
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="AI-powered GitHub Repository Intelligence Analyzer",
-    description="Backend for analyzing GitHub repositories with AI",
-    version="0.1.0"
+    title="AI-Powered GitHub Repository Intelligence Analyzer",
+    description=(
+        "Analyzes a public GitHub repository and returns a rich intelligence report "
+        "covering contributor stats, commit quality, AI code estimation, contribution "
+        "patterns, and LLM-generated insights."
+    ),
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
-# CORS configuration
-# Allowing all origins for development; in production, this should be restricted.
+# CORS — allow all origins in development.
+# In production restrict this to your frontend domain.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,26 +42,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API routes
+# Mount the API router
 app.include_router(api_router, prefix="/api")
 
-@app.get("/")
+
+@app.get("/", tags=["root"])
 async def root():
-    """Welcome route."""
+    """Welcome endpoint — confirms the backend is running."""
     return {
-        "message": "Welcome to the AI-powered GitHub Repository Intelligence Analyzer API",
+        "message": "AI-Powered GitHub Repository Intelligence Analyzer API",
+        "version": "1.0.0",
         "docs": "/docs",
-        "health": "/api/health"
+        "health": "/api/health",
+        "analyze": "POST /api/analyze",
     }
-
-@app.get("/api/health")
-async def health_check():
-    """Simple health check endpoint."""
-    return {
-        "status": "ok", 
-        "server": "RepoIntel Backend",
-        "timestamp": datetime.datetime.now().isoformat()
-    }
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
